@@ -21,7 +21,7 @@ void father_process(){
 }
 
 void daemon_process(){
-    sleep(1);
+    usleep(500);
     //Getting the pid
     pid_t pid = getpid();
     pid_t ppid = getppid();
