@@ -9,39 +9,33 @@
 
 #include "cabeceras.h"
 #define SLEEP_SECS 3
+
+void sigs(){
+    printf("\nsignal captured\n");
+    sleep(SLEEP_SECS);
+}
+
 int main(int argc, char** argv){
     
     //Se bloquea la signal de Ctrl-c
     printf("Se bloquea el control+c\n");
-    __sighandler_t s = signal(SIGINT, SIG_IGN); 
+   
     for(int i=0;i<1000000;i++){
+        signal(SIGINT,sigs);
         printf("\rCount: %d",i);
         fflush(stdout);
     }
     printf("\n");
     
-    if(*s == SIGINT){
-        printf("\n\nCtrl-c detectado\n");
-        sleep(SLEEP_SECS);
-    }
 
-    if(SIG_ERR)
-        printf("SIG_ERR raised: %d\n", SIG_ERR);
 
     printf("Ahora con control+z");
-    s = signal(SIGTSTP, SIG_IGN);
     for(int i=0;i<1000000;i++){
+        signal(SIGTSTP,sigs);
         printf("\rCount: %d",i);
         fflush(stdout);
     }
     printf("\nDone!\n");
-
-    if(*s == SIGTSTP){
-        printf("\n\nCtrl-c detectado\n");
-        sleep(SLEEP_SECS);
-    }
-    if(SIG_ERR)
-        printf("SIG_ERR raised: %d\n", SIG_ERR);
 
     return 0;
 }
