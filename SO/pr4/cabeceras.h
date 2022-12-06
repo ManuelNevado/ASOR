@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -31,5 +30,7 @@ int content_equals(char s1[], char s2[]){ //s1 y s2 deben ser cadenas terminadas
 */
 
 void raise_error(){
-    perror("ERROR\n");
+    printf("~~~~~~~~~~~~~\n");
+    perror("");
+    printf("~~~~~~~~~~~~~\n");
 }
