@@ -14,9 +14,7 @@
 #include "cabeceras.h"
 #define MAX_BUFF 200
 
-void raise_error(){
-    perror("ERROR\n");
-}
+
 
 int main(int argc, char** argv){
 
@@ -30,7 +28,7 @@ int main(int argc, char** argv){
     if(errno){
         perror("ERROR\n");
         return errno;
-
+    }
     pid_t forked = fork();
     if(errno)
         return errno;//Error en fork
@@ -39,15 +37,15 @@ int main(int argc, char** argv){
         //Child
         //Prepare the buffer to read and write    
         char buffer[MAX_BUFF];
-        int len;
         //line = getline(&buffer,&len, stdin);
         
         int i=0;
         while(i<10){
             //Escribir
             printf("Desde el hijo: Escribe lo que quieras enviar -> ");
-            int length = getline(buffer, &len, stdin);
-            write(h_p[1],buffer,len);
+            scanf("%s", buffer);
+            //printf("Desde el padre se va a enviar: %s\n", buffer);
+            write(h_p[1],buffer,MAX_BUFF);
             if (errno)
                 raise_error();
             //Leer
@@ -64,8 +62,6 @@ int main(int argc, char** argv){
         int i=0;
         while(i<10){
             char buffer[MAX_BUFF];
-            int line;
-            unsigned int lenght;
             
             //Lectura
             int size = read(h_p[0],buffer, MAX_BUFF);
@@ -74,12 +70,14 @@ int main(int argc, char** argv){
             printf("Desde el padre: Mensaje recibido -> %s\n",buffer);
             //Escritura
             printf("Desde el padre: Escribe lo que quieras enviar -> ");
-            line = getline(buffer, &len, stdin);
-            write(p_h[1],buffer,len);
+            scanf("%s",buffer);
+            write(p_h[1],buffer,MAX_BUFF);
             if (errno)
                 raise_error();
             i++;
         } 
 
      }
+    return 0;
 }
+
