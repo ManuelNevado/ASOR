@@ -7,8 +7,9 @@
 #define MAX_BUFFER 100
 int main(int argc, char** argv){
     
-    if(argc!=2){
+    if(argc!=3){
         printf("Error en el numero de argumentos\n");
+        printf("El formato de entrada debe ser palabra length, donde length es la longitud de la palabra\n");
         return 1;
     }    
     
@@ -17,7 +18,7 @@ int main(int argc, char** argv){
         raise_error();
         return errno;
     }
-    write(fd, argv, MAX_BUFFER);
+    write(fd, argv, atoi(argv[3]));
     if(errno){
         raise_error();
         return errno;

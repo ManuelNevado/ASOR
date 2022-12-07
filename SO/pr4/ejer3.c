@@ -9,10 +9,13 @@
 
 int main(int argc, char** argv){
     
-    if(!mkfifo("./test.txt",0666))
-        printf("Archivo creado\n");
-    else
-        raise_error();
+    if(argc != 2){
+        printf("Error en el numero de argumentos\n");
+        return 1;
+    }
+
+    char* line[3] = {"mkfifo", argv[1],NULL};
+    execvp("mkfifo", line);
 
     return 0;
 }
