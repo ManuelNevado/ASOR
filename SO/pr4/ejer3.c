@@ -13,9 +13,13 @@ int main(int argc, char** argv){
         printf("Error en el numero de argumentos\n");
         return 1;
     }
-
-    char* line[3] = {"mkfifo", argv[1],NULL};
-    execvp("mkfifo", line);
-
+    
+    mkfifo(argv[1], 0777);
+    if(errno){
+        raise_error();
+        return errno;
+    }else{
+        printf("Archivo creado\n");
+    }
     return 0;
 }

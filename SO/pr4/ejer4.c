@@ -4,21 +4,16 @@
  */
 
 #include "cabeceras.h"
-#define MAX_BUFFER 100
+#define MAX_BUFFER 10 
 int main(int argc, char** argv){
     
-    if(argc!=3){
-        printf("Error en el numero de argumentos\n");
-        printf("El formato de entrada debe ser palabra length, donde length es la longitud de la palabra\n");
-        return 1;
-    }    
     
-    int fd = open("./test.txt",O_WRONLY);
+    int fd = open("./test",O_WRONLY );
     if(errno){
         raise_error();
         return errno;
     }
-    write(fd, argv, atoi(argv[3]));
+    write(fd, "test\n", 6);
     if(errno){
         raise_error();
         return errno;
