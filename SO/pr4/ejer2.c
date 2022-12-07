@@ -40,7 +40,7 @@ int main(int argc, char** argv){
         //line = getline(&buffer,&len, stdin);
         
         int i=0;
-        while(i<10){
+        while(i<5){
             //Escribir
             printf("Desde el hijo: Escribe lo que quieras enviar -> ");
             scanf("%s", buffer);
@@ -60,7 +60,7 @@ int main(int argc, char** argv){
         //Parent
         //Prepare the buffer to read and write    
         int i=0;
-        while(i<10){
+        while(i<5){
             char buffer[MAX_BUFF];
             
             //Lectura
