@@ -19,26 +19,73 @@
 
 #include "cabeceras.h"
 #define STR_LENGTH 10
-#define MAX_BUFFER 100
+#define MAX_BUFFER 256
+#define MAX_TIME 3
+
+int return_errno();
+int info_source();
 
 int main(int argc, char** argv){
+
+    //Se crea el buffer
+    char* buffer = (char*) malloc(256*sizeof(char));
+
+
+    //Se crea la tuberia con nombre
+    mkfifo("test_fifo", 0666);
+    int fd_fifo = open("test_fifo", O_ASYNC);
+    if(errno)
+        return return_errno();
+
+    //Se crea el set de File Descriptors
+    fd_set file_descriptors;
+    FD_ZERO(&file_descriptors);
+    FD_SET(0,&file_descriptors);
+    //FD_SET(1,&file_descriptors);
+    FD_SET(fd_fifo,&file_descriptors);
+
+    //Se crea el struct de tiempo
+    struct timeval timeout;
+    timeout.tv_sec = MAX_TIME;
+    timeout.tv_usec = 0;
+
+    //Select
+    int cambios;
     
-    char name[STR_LENGTH] = "wfrgswety\0";
+    int source = 0;
 
-    mkfifo(name, 0777);
-    if(errno){
-        raise_error();
-        return errno;
+    while(1){
+        cambios = select(source+1, &file_descriptors, NULL, NULL, &timeout);
+
+        if (cambios == -1)
+            return return_errno();
+        else if(cambios){
+            read(0,buffer,256);
+            printf("Datos nuevos: %s\n", buffer);
+        }else
+           printf("Ningun dato nuevo en %d segundos\n",MAX_TIME);
+        
+        source = info_source(fd_fifo);
+
+        sleep(3);
+        
     }
-
-    //Leer de la tuberia
-    char buffer[MAX_BUFFER];
-    int fd = open(name, O_RDONLY);
-    int length;
-    printf("Dispuesto a leer\n");
-    length = read(fd,buffer,MAX_BUFFER);
-
-    printf("%s\n", buffer);
+    free(buffer);
 
     return 0;
+}
+
+int info_source(int fd){
+    printf("0- stdin\n");
+    printf("%d- fifo_pipe\n", fd);
+    int source;
+    scanf("%d", &source);
+    return source;
+}
+
+int return_errno(){
+    printf("~~~~~~~~~~~~~~~~~\n");
+    perror("ERRNO RAISED\n");
+    printf("~~~~~~~~~~~~~~~~~\n");
+    return errno;
 }
